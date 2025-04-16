@@ -1,10 +1,12 @@
-package com.im.BackendCore.models;
+package com.im.BackendCore.User;
 
+import com.im.BackendCore.Property.PropertyModel;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="tb_usuarios")
@@ -19,6 +21,12 @@ public class UserModel {
     private String email;
     private String password;
     private String urlPhoto;
+
+    @OneToMany(mappedBy = "owner")
+    private List<PropertyModel> ownedProperties;
+
+    @OneToMany(mappedBy = "lessor")
+    private List<PropertyModel> rentedProperties;
 
     public UserModel() {
     }
