@@ -1,17 +1,20 @@
 package com.im.BackendCore.User;
 
+import com.im.BackendCore.Enums.UserRole;
 import com.im.BackendCore.Property.PropertyModel;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="tb_usuarios")
-@Getter
-@Setter
+@Table(name="tb_users")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +24,10 @@ public class UserModel {
     private String email;
     private String password;
     private String urlPhoto;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+    private Date createdAt;
+    private Date updatedAt;
 
     @OneToMany(mappedBy = "owner")
     private List<PropertyModel> ownedProperties;
@@ -28,15 +35,5 @@ public class UserModel {
     @OneToMany(mappedBy = "lessor")
     private List<PropertyModel> rentedProperties;
 
-    public UserModel() {
-    }
-
-    public UserModel(String name, Date birthdate, String email, String password, String urlPhoto) {
-        this.name = name;
-        this.birthdate = birthdate;
-        this.email = email;
-        this.password = password;
-        this.urlPhoto = urlPhoto;
-    }
 
 }

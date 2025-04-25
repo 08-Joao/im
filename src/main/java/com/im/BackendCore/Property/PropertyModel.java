@@ -2,15 +2,17 @@ package com.im.BackendCore.Property;
 
 import com.im.BackendCore.User.UserModel;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "tb_property")
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PropertyModel {
 
     @Id
@@ -29,14 +31,5 @@ public class PropertyModel {
     @JoinColumn(name = "lessor_id")
     private UserModel lessor;
 
-    public PropertyModel() {
-    }
-
-    public PropertyModel(String name, String description, Integer value, List<String> propertyPhotos) {
-        this.name = name;
-        this.description = description;
-        this.value = value;
-        this.propertyPhotos = propertyPhotos;
-    }
 
 }
