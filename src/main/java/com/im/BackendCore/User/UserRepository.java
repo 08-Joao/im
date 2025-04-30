@@ -2,6 +2,9 @@ package com.im.BackendCore.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<UserModel, Long> {
+import java.util.Optional;
 
+public interface UserRepository extends JpaRepository<UserModel, Long> {
+    Optional<UserModel> findByEmail(String email);
+    Optional<UserModel> findByCpf(String cpf);
 }

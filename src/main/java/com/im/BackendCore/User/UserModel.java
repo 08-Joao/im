@@ -21,6 +21,7 @@ public class UserModel {
     private Long id;
     private String name;
     private Date birthdate;
+    private String cpf;
     private String email;
     private String password;
     private String urlPhoto;

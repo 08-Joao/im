@@ -1,8 +1,8 @@
 package com.im.BackendCore.User;
 
+import com.im.BackendCore.Exception.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.im.BackendCore.User.UserService;
 
 @RestController
 @RequestMapping("/user")
@@ -14,30 +14,35 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/ping")
+    public String teste(){
+        return "Pong";
+    }
 
-    // GET /user/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<UserModel> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         return userService.getUserById(id)
-                .map(ResponseEntity::ok) // 200 com corpo
-                .orElseGet(() -> ResponseEntity.notFound().build()); // 404
+                .map(user -> ResponseEntity.ok(UserResponseDTO.fromUserModel(user)))
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
     }
 
-    // POST /user/create
     @PostMapping("/create")
-    public ResponseEntity<UserModel> createUser(@RequestBody UserCreateDTO userCreateDTO) {
+    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
         UserModel createdUser = userService.createUser(userCreateDTO);
-        return ResponseEntity.status(201).body(createdUser); // 201 Created
+        UserResponseDTO responseDTO = UserResponseDTO.fromUserModel(createdUser);
+        return ResponseEntity.status(201).body(responseDTO);
     }
 
-    // DELETE /user/deleteById/{id}
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<UserResponseDTO> editUser(@PathVariable Long id, @RequestBody UserEditDTO userEditDTO) {
+        UserModel editedUser = userService.editUser(id, userEditDTO);
+        UserResponseDTO responseDTO = UserResponseDTO.fromUserModel(editedUser);
+        return ResponseEntity.ok(responseDTO);
+    }
+
     @DeleteMapping("/deleteById/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        boolean deleted = userService.deleteUserById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build(); // 204
-        } else {
-            return ResponseEntity.notFound().build(); // 404
-        }
+        userService.deleteUserById(id);
+        return ResponseEntity.noContent().build();
     }
 }
